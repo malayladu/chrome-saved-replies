@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Saved Replies",
+  "version": "1.0",
+  "description": "Save and insert pre-written replies anywhere.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

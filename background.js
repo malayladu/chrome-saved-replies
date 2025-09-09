@@ -1,0 +1,1 @@
+// Currently no background logic needed. Placeholder.

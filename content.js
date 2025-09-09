@@ -1,0 +1,1 @@
+// Placeholder for future: can handle hotkeys, context menu insertions, etc.

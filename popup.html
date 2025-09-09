@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Saved Replies</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h2>Saved Replies</h2>
+
+  <form id="replyForm">
+    <input type="text" id="title" placeholder="Title" required />
+    <textarea id="content" placeholder="Content" required></textarea>
+    <input type="text" id="tag" placeholder="Tag (optional)" />
+    <button type="submit">Save Reply</button>
+  </form>
+
+  <h3>My Replies</h3>
+  <ul id="replyList"></ul>
+
+  <script src="popup.js"></script>
+</body>
+</html>
