@@ -5,18 +5,26 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <h2>Saved Replies</h2>
+<h2>Saved Replies</h2>
 
-  <form id="replyForm">
-    <input type="text" id="title" placeholder="Title" required />
-    <textarea id="content" placeholder="Content" required></textarea>
-    <input type="text" id="tag" placeholder="Tag (optional)" />
-    <button type="submit">Save Reply</button>
-  </form>
+<form id="replyForm" class="card">
+  <input type="text" id="title" placeholder="Title" required />
+  <textarea id="content" placeholder="Content" required></textarea>
+  <input type="text" id="tag" placeholder="Tags (comma separated)" />
+  <input type="text" id="category" placeholder="Category/Folder (optional)" />
+  <button type="submit" class="btn">Save Reply</button>
+</form>
 
-  <h3>My Replies</h3>
-  <ul id="replyList"></ul>
+<div class="filter">
+  <input type="text" id="filterTag" placeholder="Filter by tag..." />
+  <select id="filterCategory">
+    <option value="">All Categories</option>
+  </select>
+</div>
 
-  <script src="popup.js"></script>
+<h3>My Replies</h3>
+<div id="replyContainer"></div>
+
+<script src="popup.js"></script>
 </body>
 </html>
