@@ -7,7 +7,14 @@
   <link href="libs/quill/quill.snow.css" rel="stylesheet">
 </head>
 <body>
+
 <h2>Saved Replies</h2>
+<div class="top-right-buttons">
+    <button id="exportBtn" class="btn">Export Replies</button>
+    <input type="file" id="importFile" accept="application/json" style="display:none;" />
+    <button id="importBtn" class="btn">Import Replies</button>
+</div>
+
 
 <form id="replyForm" class="card">
   <input type="text" id="title" placeholder="Title" required />

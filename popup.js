@@ -10,6 +10,13 @@ const quill = new Quill('#editor', {
 });
 
 function loadReplies() {
+
+	document.getElementById("exportBtn").addEventListener("click", exportReplies);
+	document.getElementById("importBtn").addEventListener("click", () => {
+		document.getElementById("importFile").click();
+	});
+	document.getElementById("importFile").addEventListener("change", importReplies);
+
 	chrome.storage.local.get(["replies"], (result) => {
 		replyContainer.innerHTML = "";
 		const replies = result.replies || [];
@@ -138,6 +145,45 @@ function insertReplyAtCursor(html) {
 		// Insert HTML if contentEditable
 		document.execCommand("insertHTML", false, html);
 	}
+}
+
+function exportReplies() {
+	chrome.storage.local.get(["replies"], (result) => {
+		const data = result.replies || [];
+		const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "saved-replies.json";
+		a.click();
+		URL.revokeObjectURL(url);
+	});
+}
+
+function importReplies(event) {
+	const file = event.target.files[0];
+	if ( !file) return;
+	const reader = new FileReader();
+	reader.onload = (e) => {
+		try {
+			const imported = JSON.parse(e.target.result);
+			if ( !Array.isArray(imported)) {
+				alert("Invalid file format");
+				return;
+			}
+			chrome.storage.local.get(["replies"], (result) => {
+				const existing = result.replies || [];
+				const merged = [...existing, ...imported];
+				chrome.storage.local.set({replies: merged}, () => {
+					alert("Replies imported successfully!");
+					displayReplies(merged);
+				});
+			});
+		} catch (err) {
+			alert("Failed to import: " + err.message);
+		}
+	};
+	reader.readAsText(file);
 }
 
 loadReplies();

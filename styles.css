@@ -96,3 +96,36 @@ form input {
   border-radius: 4px;
   border: 1px solid #ddd;
 }
+
+.btn.insert {
+    background: #17a2b8;
+}
+
+.btm.insert:hover {
+    background: #117a8b;
+}
+
+.btn.delete {
+    background: #dc3545;
+}
+
+.btn.delete:hover {
+    background: #a71d2a;
+}
+
+.btn.edit {
+    background: #28a745;
+}
+
+.btn.edit:hover {
+    background: #1e7e34;
+}
+
+.top-right-buttons {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.top-right-buttons .btn {
+  margin-left: 5px;
+}
