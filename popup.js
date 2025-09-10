@@ -3,13 +3,19 @@ const replyContainer = document.getElementById("replyContainer");
 const filterTag = document.getElementById("filterTag");
 const filterCategory = document.getElementById("filterCategory");
 
+// Initialize Quill editor
+const quill = new Quill('#editor', {
+	theme: 'snow',
+	placeholder: "Write your reply here..."
+});
+
 function loadReplies() {
 	chrome.storage.local.get(["replies"], (result) => {
 		replyContainer.innerHTML = "";
 		const replies = result.replies || [];
 
 		// Build category dropdown
-		const categories = [...new Set(replies.map(r => r.category).filter(Boolean))];
+		const categories = [...new Set(replies.map(r => r.category).filter(String))];
 		filterCategory.innerHTML = `<option value="">All Categories</option>`;
 		categories.forEach(cat => {
 			const opt = document.createElement("option");
@@ -31,13 +37,20 @@ function loadReplies() {
 				const card = document.createElement("div");
 				card.className = "card";
 
+				// Render tags as badges
+				const tagsHtml = (reply.tag || "")
+					.split(",")
+					.filter(t => t.trim())
+					.map(t => `<span class="tag">${t.trim()}</span>`)
+					.join(" ");
+
 				card.innerHTML = `
           <div class="card-header">
             <strong>${reply.title}</strong>
             <span class="category">${reply.category || ""}</span>
           </div>
-          <p>${reply.content}</p>
-          <div class="tags">${reply.tag || ""}</div>
+          <div class="reply-content">${reply.content}</div>
+          <div class="tags">${tagsHtml}</div>
           <div class="actions">
             <button data-index="${index}" class="btn insert">Insert</button>
             <button data-index="${index}" class="btn edit">Edit</button>
@@ -52,7 +65,7 @@ function loadReplies() {
 replyForm.addEventListener("submit", (e) => {
 	e.preventDefault();
 	const title = document.getElementById("title").value;
-	const content = document.getElementById("content").value;
+	const content = quill.root.innerHTML; // Save HTML
 	const tag = document.getElementById("tag").value;
 	const category = document.getElementById("category").value;
 
@@ -61,6 +74,7 @@ replyForm.addEventListener("submit", (e) => {
 		replies.push({title, content, tag, category});
 		chrome.storage.local.set({replies}, loadReplies);
 		replyForm.reset();
+		quill.root.innerHTML = ""; // Clear editor
 	});
 });
 
@@ -90,7 +104,7 @@ replyContainer.addEventListener("click", (e) => {
 		if (e.target.classList.contains("edit")) {
 			const reply = replies[index];
 			document.getElementById("title").value = reply.title;
-			document.getElementById("content").value = reply.content;
+			quill.root.innerHTML = reply.content; // Load HTML back into editor
 			document.getElementById("tag").value = reply.tag || "";
 			document.getElementById("category").value = reply.category || "";
 			replies.splice(index, 1);
@@ -102,12 +116,11 @@ replyContainer.addEventListener("click", (e) => {
 filterTag.addEventListener("input", loadReplies);
 filterCategory.addEventListener("change", loadReplies);
 
-function insertReplyAtCursor(text) {
+function insertReplyAtCursor(html) {
 	const activeElement = document.activeElement;
-	if (activeElement && (activeElement.tagName === "TEXTAREA" || activeElement.tagName === "INPUT" || activeElement.isContentEditable)) {
-		const start = activeElement.selectionStart;
-		const end = activeElement.selectionEnd;
-
+	if (activeElement && (activeElement.tagName === "TEXTAREA" || activeElement.tagName === "INPUT")) {
+		// Insert plain text version if input/textarea
+		const text = html.replace(/<[^>]+>/g, "");
 		if (activeElement.tagName === "TEXTAREA" || activeElement.tagName === "INPUT") {
 			// Handle regular input/textarea elements
 			const value = activeElement.value;
@@ -121,6 +134,9 @@ function insertReplyAtCursor(text) {
 		}
 		activeElement.selectionStart = activeElement.selectionEnd = start + text.length;
 		activeElement.focus();
+	} else if (activeElement && activeElement.isContentEditable) {
+		// Insert HTML if contentEditable
+		document.execCommand("insertHTML", false, html);
 	}
 }
 

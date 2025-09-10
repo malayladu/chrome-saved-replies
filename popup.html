@@ -3,13 +3,17 @@
 <head>
   <title>Saved Replies</title>
   <link rel="stylesheet" href="styles.css" />
+  <!-- Quill editor CSS -->
+  <link href="libs/quill/quill.snow.css" rel="stylesheet">
 </head>
 <body>
 <h2>Saved Replies</h2>
 
 <form id="replyForm" class="card">
   <input type="text" id="title" placeholder="Title" required />
-  <textarea id="content" placeholder="Content" required></textarea>
+
+  <div id="editor" class="editor"></div>
+
   <input type="text" id="tag" placeholder="Tags (comma separated)" />
   <input type="text" id="category" placeholder="Category/Folder (optional)" />
   <button type="submit" class="btn">Save Reply</button>
@@ -24,6 +28,9 @@
 
 <h3>My Replies</h3>
 <div id="replyContainer"></div>
+
+<!-- Quill editor JS -->
+<script src="libs/quill/quill.min.js"></script>
 
 <script src="popup.js"></script>
 </body>
