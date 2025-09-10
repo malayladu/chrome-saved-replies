@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Saved Replies",
-  "version": "1.0",
+  "version": "1.0.2",
   "description": "Save and insert pre-written replies anywhere.",
   "permissions": ["storage", "activeTab", "scripting"],
   "action": {
